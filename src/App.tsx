@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Copy, CheckCircle, ShoppingBag, Clock, Zap, Tag, X, ArrowRight, Star } from 'lucide-react';
 
 const COUPON_CODE = "M56";
-const NOON_URL = "https://www.noon.com/egypt-en/";
+const NOON_URL = "https://www.noon.com/saudi-ar/";
 
 /* ─── Premium Animated Canvas Background ─── */
 function AnimatedBackground() {
@@ -11,7 +11,6 @@ function AnimatedBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    // Set alpha to false to let browser know there's no transparency behind canvas (optimization)
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
@@ -21,7 +20,6 @@ function AnimatedBackground() {
     canvas.width = W;
     canvas.height = H;
 
-    // Smooth Mouse Tracking for Parallax & Interactions
     let mouseX = W / 2;
     let mouseY = H / 2;
     let targetMouseX = W / 2;
@@ -41,8 +39,7 @@ function AnimatedBackground() {
     };
     window.addEventListener('resize', resize);
 
-    /* ── Floating Particles ── */
-    const PARTICLE_COUNT = Math.min(Math.floor((W * H) / 10000), 120); // Responsive count
+    const PARTICLE_COUNT = Math.min(Math.floor((W * H) / 10000), 120);
     interface Particle {
       x: number; y: number;
       baseR: number; r: number;
@@ -51,7 +48,7 @@ function AnimatedBackground() {
       angle: number; spin: number;
       pulseRate: number; pulseVal: number;
     }
-    const colors = ['#3b82f6', '#9333ea', '#fbbf24', '#ffffff', '#60a5fa']; // Blue, Purple, Gold, White, Light Blue
+    const colors = ['#3b82f6', '#9333ea', '#fbbf24', '#ffffff', '#60a5fa'];
     const particles: Particle[] = Array.from({ length: PARTICLE_COUNT }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
@@ -66,7 +63,6 @@ function AnimatedBackground() {
       pulseVal: Math.random() * Math.PI * 2,
     }));
 
-    /* ── Morphing Gradient Orbs ── */
     const orbs = [
       { baseX: 0.2, baseY: 0.3, size: 0.6, color: 'rgba(59, 130, 246, 0.12)', angle: 0, speed: 0.0015, offset: 120 },
       { baseX: 0.8, baseY: 0.6, size: 0.5, color: 'rgba(147, 51, 234, 0.12)', angle: 2, speed: 0.001, offset: 150 },
@@ -75,26 +71,21 @@ function AnimatedBackground() {
     ];
 
     const draw = () => {
-      // Lerp mouse coordinates
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
 
-      // Dark Base background
-      ctx.fillStyle = '#030712'; // Tailwind gray-950 deep black
+      ctx.fillStyle = '#030712';
       ctx.fillRect(0, 0, W, H);
 
       ctx.globalCompositeOperation = 'screen';
 
-      // ── Draw Morphing Glowing Orbs (Parallax) ──
       orbs.forEach((orb, i) => {
         orb.angle += orb.speed;
         const radius = Math.max(W, H) * orb.size;
         
-        // Organic orbit
         const offsetX = Math.cos(orb.angle) * orb.offset;
         const offsetY = Math.sin(orb.angle) * orb.offset;
         
-        // Depth parallax based on mouse
         const parallaxX = (mouseX - W / 2) * (i + 1) * 0.04;
         const parallaxY = (mouseY - H / 2) * (i + 1) * 0.04;
 
@@ -111,7 +102,6 @@ function AnimatedBackground() {
         ctx.fill();
       });
 
-      // ── Connect Nearby Particles (Network lines) ──
       ctx.lineWidth = 0.5;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -131,17 +121,14 @@ function AnimatedBackground() {
 
       ctx.globalCompositeOperation = 'source-over';
 
-      // ── Draw Particles ──
       particles.forEach(p => {
         p.pulseVal += p.pulseRate;
-        const pulse = (Math.sin(p.pulseVal) + 1) / 2; // 0 to 1
+        const pulse = (Math.sin(p.pulseVal) + 1) / 2;
 
         p.angle += p.spin;
-        // Fluid sine-wave movement
         p.x += p.vx + Math.cos(p.angle) * 0.4;
         p.y += p.vy + Math.sin(p.angle) * 0.4;
 
-        // Hover effect: Repel / Attract and enlarge
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const distSq = dx * dx + dy * dy;
@@ -149,28 +136,24 @@ function AnimatedBackground() {
         
         if (dist < 150) {
           const force = (150 - dist) / 150;
-          p.x -= dx * force * 0.02; // Subtle push
+          p.x -= dx * force * 0.02;
           p.y -= dy * force * 0.02;
-          p.r = p.baseR + force * 2.5; // Grow near mouse
+          p.r = p.baseR + force * 2.5;
         } else {
-          // Return to normal size smoothly
           p.r += (p.baseR - p.r) * 0.1;
         }
 
-        // Screen wrapping (seamless)
         if (p.x < -20) p.x = W + 20;
         if (p.x > W + 20) p.x = -20;
         if (p.y < -20) p.y = H + 20;
         if (p.y > H + 20) p.y = -20;
 
-        // Outer Glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * 3.5, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = 0.15 * pulse;
         ctx.fill();
 
-        // Inner Core
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.globalAlpha = 0.6 + pulse * 0.4;
@@ -197,7 +180,6 @@ function AnimatedBackground() {
         className="fixed inset-0 w-full h-full pointer-events-none"
         style={{ zIndex: 0 }}
       />
-      {/* ── Subtle Noise / Grain Overlay for cinematic realism ── */}
       <div 
         className="fixed inset-0 pointer-events-none mix-blend-overlay" 
         style={{ 
@@ -232,9 +214,9 @@ function CountdownTimer() {
   return (
     <div className="flex items-center justify-center gap-2 sm:gap-4" dir="ltr" aria-label="Countdown timer">
       {[
-        { value: time.hours, label: 'HRS' },
-        { value: time.minutes, label: 'MIN' },
-        { value: time.seconds, label: 'SEC' },
+        { value: time.hours, label: 'ساعة' },
+        { value: time.minutes, label: 'دقيقة' },
+        { value: time.seconds, label: 'ثانية' },
       ].map(({ value, label }, i) => (
         <React.Fragment key={label}>
           <div className="flex flex-col items-center">
@@ -252,7 +234,6 @@ function CountdownTimer() {
 
 /* ─── Modal ─── */
 function Modal({ couponCode, onClose, onShop }: { couponCode: string; onClose: () => void; onShop: () => void }) {
-  // Trap focus / escape logic for accessibility (UX rule)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -288,14 +269,14 @@ function Modal({ couponCode, onClose, onShop }: { couponCode: string; onClose: (
             <CheckCircle className="w-8 h-8 text-green-400" />
           </div>
           <div>
-            <h3 className="text-2xl font-black text-white mb-2">تم النسخ بنجاح!</h3>
+            <h3 className="text-2xl font-black text-white mb-2">نسخنا الكود يا هلا!</h3>
             <p className="text-gray-400 text-sm leading-relaxed" dir="rtl">
-              كود الخصم <strong className="text-yellow-400 font-bold">{couponCode}</strong> اتنسخ. روح نون دلوقتي واستخدمه عند الدفع!
+              كود الخصم <strong className="text-yellow-400 font-bold">{couponCode}</strong> انتسخ معك. روح نون الحين واستخدمه وقت الدفع!
             </p>
           </div>
           
           <div className="bg-[#111827] border border-white/5 rounded-2xl p-4 shadow-inner">
-            <p className="text-xs text-gray-500 mb-1">كود الخصم المستنسخ</p>
+            <p className="text-xs text-gray-500 mb-1">الكود المنسوخ</p>
             <p className="text-3xl font-black text-white tracking-[0.2em]">{couponCode}</p>
           </div>
 
@@ -305,7 +286,7 @@ function Modal({ couponCode, onClose, onShop }: { couponCode: string; onClose: (
               className="w-full bg-white text-black hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 font-black py-4 px-6 rounded-2xl transition-all duration-200 cursor-pointer shadow-lg flex items-center justify-center gap-2 text-lg group"
             >
               <ShoppingBag className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-              <span>اشتري من نون دلوقتي</span>
+              <span>تسوق من نون الحين</span>
               <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
             </button>
             <button
@@ -330,14 +311,13 @@ export default function App() {
     navigator.clipboard.writeText(COUPON_CODE).then(() => {
       setCopied(true);
       setShowModal(true);
-      // Reset copied state after 3 seconds
       setTimeout(() => setCopied(false), 3000);
     });
   };
 
   const handleShop = () => {
     setShowModal(false);
-    window.open(NOON_URL, '_blank', 'noopener,noreferrer'); // Security best practice
+    window.open(NOON_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -389,17 +369,14 @@ export default function App() {
         }
       `}</style>
 
-      {/* ── Animated Canvas Background ── */}
       <AnimatedBackground />
 
-      {/* ── Navbar Space (Best Practice) ── */}
       <nav className="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-10 pointer-events-none">
         <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
           <Zap className="w-4 h-4 text-yellow-400" />
         </div>
       </nav>
 
-      {/* ── Static radial vignette ── */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
         <div style={{
           position: 'absolute', inset: 0,
@@ -407,10 +384,8 @@ export default function App() {
         }} />
       </div>
 
-      {/* ── Main Content ── */}
       <main className="relative flex flex-col items-center justify-center min-h-[100dvh] px-4 py-20" style={{ zIndex: 2 }}>
 
-        {/* Badge */}
         <div className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/20 rounded-full px-5 py-2.5 mb-8 cursor-default transition-transform hover:scale-105 duration-300">
           <Zap className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
           <span className="text-yellow-400 font-bold text-xs tracking-[0.15em] uppercase" dir="rtl">
@@ -419,20 +394,17 @@ export default function App() {
           <Zap className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
         </div>
 
-        {/* Card */}
         <div className="glass-panel rounded-[2rem] p-8 sm:p-12 max-w-[480px] w-full relative transition-all duration-300 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] motion-safe-glow-pulse motion-safe-slide-up">
 
-          {/* Card inner subtle glow line */}
           <div className="absolute inset-0 rounded-[2rem] pointer-events-none overflow-hidden">
             <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent" />
           </div>
 
-          {/* Noon Logo */}
           <div className="flex justify-center mb-8">
             <div className="bg-[#FEE000] rounded-2xl p-4 w-20 h-20 flex items-center justify-center shadow-[0_0_30px_rgba(254,224,0,0.15)] motion-safe-float">
               <img
                 src="https://f.nooncdn.com/s/app/com/noon/design-system/logos/noon-logo-ar.svg"
-                alt="Noon Egypt Logo"
+                alt="Noon Saudi Logo"
                 className="w-14 h-auto"
                 draggable="false"
                 onError={(e) => { e.currentTarget.src = "https://f.nooncdn.com/s/app/com/noon/design-system/logos/noon-logo-en.svg"; }}
@@ -440,7 +412,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Headline */}
           <div className="text-center mb-10 space-y-4" dir="rtl">
             <h1 className="text-3xl sm:text-[2.5rem] font-black leading-tight tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-200 to-gray-400">
@@ -448,11 +419,10 @@ export default function App() {
               </span>
             </h1>
             <p className="text-gray-400 text-[15px] font-medium leading-relaxed max-w-[90%] mx-auto">
-              استخدم الكود ده دلوقتي واشتري كل اللي محتاجه من <span className="text-yellow-400 font-bold">نون مصر</span> بأقل الأسعار الممكنة.
+              استخدم الكود هذا الحين واشتر كل اللي تحتاجه من <span className="text-yellow-400 font-bold">نون السعودية</span> بأقل الأسعار.
             </p>
           </div>
 
-          {/* User Trust */}
           <div className="flex justify-center items-center gap-2 mb-8 bg-white/5 border border-white/5 rounded-full py-2 w-max mx-auto px-4">
             <div className="flex -space-x-2 mr-2">
               <div className="w-6 h-6 rounded-full bg-blue-500 border-2 border-[#0A0F1C]" />
@@ -464,10 +434,9 @@ export default function App() {
                 <Star key={i} className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
               ))}
             </div>
-            <span className="text-gray-300 text-[11px] font-semibold tracking-wide ml-1 pr-1 border-l border-white/10">مُجرّب ويعمل 100%</span>
+            <span className="text-gray-300 text-[11px] font-semibold tracking-wide ml-1 pr-1 border-l border-white/10">مُجرّب وشغال 100%</span>
           </div>
 
-          {/* Coupon Box Container */}
           <div className="relative mb-8">
             <button
               id="copy-coupon-box"
@@ -477,27 +446,24 @@ export default function App() {
             >
               <div className="flex items-center gap-2 text-gray-400 text-xs font-semibold tracking-[0.1em] uppercase mb-1">
                 <Tag className="w-3.5 h-3.5 text-yellow-400/80" />
-                كود الخصم الحصري
+                الكود الحصري
               </div>
               <span className="text-6xl font-black tracking-[0.15em] text-white group-hover:text-yellow-400 transition-colors duration-300 motion-safe-shimmer shimmer-text" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                 {COUPON_CODE}
               </span>
               
               <div className={`absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 transition-all duration-300 ${copied ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2 pointer-events-none'}`}>
-                <CheckCircle className="w-3 h-3" /> تم النسخ!
+                <CheckCircle className="w-3 h-3" /> نسخنا الكود!
               </div>
 
-              {/* Decorative dash line */}
               <div className="absolute inset-x-6 bottom-0 translate-y-1/2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             </button>
           </div>
 
-          {/* Countdown timer */}
           <div className="mb-8">
             <CountdownTimer />
           </div>
 
-          {/* Main CTA */}
           <button
             id="copy-coupon-btn"
             onClick={handleCopy}
@@ -505,16 +471,15 @@ export default function App() {
             aria-label="انسخ كود الخصم"
           >
             <Copy className="w-5 h-5 transition-transform duration-300 group-active:scale-90" />
-            <span className="tracking-wide">انسخ الكود واشتري دلوقتي</span>
+            <span className="tracking-wide">انسخ الكود وتسوق الحين</span>
             <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
           </button>
 
-          {/* Trust badges */}
           <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 flex-wrap">
             {[
               { text: 'خصم فوري', icon: Zap },
               { text: 'مضمون 100%', icon: CheckCircle },
-              { text: 'شغال بمصر', icon: Star }
+              { text: 'شغال بالسعودية', icon: Star }
             ].map((badge, idx) => (
               <div key={idx} className="flex items-center gap-1.5 text-gray-400 text-[11px] font-medium">
                 <badge.icon className="w-3.5 h-3.5 text-gray-500" />
@@ -525,18 +490,16 @@ export default function App() {
         </div>
 
         <p className="text-gray-500 text-[11px] font-medium mt-10 text-center uppercase tracking-widest max-w-sm" dir="rtl">
-          تطبق الشروط والأحكام الخاصة بمتجر نون مصر • السعر غير شامل الشحن
+          تطبق الشروط والأحكام الخاصة بمتجر نون السعودية • السعر لا يشمل التوصيل
         </p>
       </main>
 
-      {/* Footer */}
       <footer className="relative py-6 text-center border-t border-white/5" style={{ zIndex: 2 }}>
         <p className="text-gray-600 text-xs font-medium relative z-10">
           Copyright © {new Date().getFullYear()} <span className="text-gray-500 font-bold">DailyDiscounts</span>. All rights reserved.
         </p>
       </footer>
 
-      {/* Modal */}
       {showModal && (
         <Modal couponCode={COUPON_CODE} onClose={() => setShowModal(false)} onShop={handleShop} />
       )}
