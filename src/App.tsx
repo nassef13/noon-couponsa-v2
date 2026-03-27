@@ -277,7 +277,7 @@ function Modal({ couponCode, onClose, onShop }: { couponCode: string; onClose: (
 
         <button 
           onClick={onClose} 
-          className="absolute top-5 right-5 text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer p-2 rounded-full hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400" 
+          className="absolute top-5 right-5 z-10 text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer p-2 rounded-full hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400" 
           aria-label="Close dialog"
         >
           <X className="w-5 h-5" />
