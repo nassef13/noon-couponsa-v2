@@ -311,12 +311,24 @@ export default function App() {
     navigator.clipboard.writeText(COUPON_CODE).then(() => {
       setCopied(true);
       setShowModal(true);
+      
+      // TikTok Pixel Tracking for Code Copy
+      if (typeof window !== 'undefined' && (window as any).ttq) {
+        (window as any).ttq.track('CopyCode');
+      }
+
       setTimeout(() => setCopied(false), 3000);
     });
   };
 
   const handleShop = () => {
     setShowModal(false);
+
+    // TikTok Pixel Tracking for Shop Action
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('ShopFromNoon');
+    }
+
     window.open(NOON_URL, '_blank', 'noopener,noreferrer');
   };
 
