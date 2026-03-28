@@ -312,9 +312,19 @@ export default function App() {
       setCopied(true);
       setShowModal(true);
       
-      // TikTok Pixel Tracking for Code Copy
+      // TikTok Pixel Tracking: AddToCart
       if (typeof window !== 'undefined' && (window as any).ttq) {
-        (window as any).ttq.track('CopyCode');
+        (window as any).ttq.track('AddToCart', {
+          value: 10.00,
+          currency: 'USD',
+          contents: [
+            {
+              content_id: 'coupon_copy',
+              content_type: 'product',
+              content_name: 'Noon Coupon - Copy'
+            }
+          ]
+        });
       }
 
       setTimeout(() => setCopied(false), 3000);
@@ -324,9 +334,19 @@ export default function App() {
   const handleShop = () => {
     setShowModal(false);
 
-    // TikTok Pixel Tracking for Shop Action
+    // TikTok Pixel Tracking: InitiateCheckout
     if (typeof window !== 'undefined' && (window as any).ttq) {
-      (window as any).ttq.track('ShopFromNoon');
+      (window as any).ttq.track('InitiateCheckout', {
+        value: 10.00,
+        currency: 'USD',
+        contents: [
+          {
+            content_id: 'shop_noon',
+            content_type: 'product',
+            content_name: 'Go to Noon Store'
+          }
+        ]
+      });
     }
 
     window.open(NOON_URL, '_blank', 'noopener,noreferrer');
