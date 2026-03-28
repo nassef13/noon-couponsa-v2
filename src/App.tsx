@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Copy, CheckCircle, ShoppingBag, Clock, Zap, Tag, X, ArrowRight, Star } from 'lucide-react';
 
-const COUPON_CODE = "M56";
+const COUPON_CODE = "MXX63";
 const NOON_URL = "https://www.noon.com/saudi-ar/";
 
 /* ─── Premium Animated Canvas Background ─── */
