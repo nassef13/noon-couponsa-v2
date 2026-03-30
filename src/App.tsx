@@ -315,8 +315,14 @@ export default function App() {
       // TikTok Pixel Tracking: AddToCart (Intermediate step)
       if (typeof window !== 'undefined' && (window as any).ttq) {
         (window as any).ttq.track('AddToCart', {
-          content_name: 'Copied Coupon Code',
-          value: 0.00,
+          content_type: 'product',
+          contents: [{
+            content_id: 'copy_coupon',
+            content_name: 'Copied Coupon Code',
+            quantity: 1,
+            price: 1.00
+          }],
+          value: 1.00,
           currency: 'USD'
         });
       }
@@ -331,7 +337,13 @@ export default function App() {
     // TikTok Pixel Tracking: Purchase (Crucial fix for "Pixel missing vertical funnel events")
     if (typeof window !== 'undefined' && (window as any).ttq) {
       (window as any).ttq.track('Purchase', {
-        content_name: 'Redirected to Noon',
+        content_type: 'product',
+        contents: [{
+          content_id: 'redirect_noon',
+          content_name: 'Redirected to Noon',
+          quantity: 1,
+          price: 1.00
+        }],
         value: 1.00,
         currency: 'USD'
       });
