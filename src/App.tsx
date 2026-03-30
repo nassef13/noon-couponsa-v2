@@ -312,18 +312,12 @@ export default function App() {
       setCopied(true);
       setShowModal(true);
       
-      // TikTok Pixel Tracking: AddToCart
+      // TikTok Pixel Tracking: AddToCart (Intermediate step)
       if (typeof window !== 'undefined' && (window as any).ttq) {
         (window as any).ttq.track('AddToCart', {
-          value: 10.00,
-          currency: 'USD',
-          contents: [
-            {
-              content_id: 'coupon_copy',
-              content_type: 'product',
-              content_name: 'Noon Coupon - Copy'
-            }
-          ]
+          content_name: 'Copied Coupon Code',
+          value: 0.00,
+          currency: 'USD'
         });
       }
 
@@ -334,18 +328,12 @@ export default function App() {
   const handleShop = () => {
     setShowModal(false);
 
-    // TikTok Pixel Tracking: InitiateCheckout
+    // TikTok Pixel Tracking: Purchase (Crucial fix for "Pixel missing vertical funnel events")
     if (typeof window !== 'undefined' && (window as any).ttq) {
-      (window as any).ttq.track('InitiateCheckout', {
-        value: 10.00,
-        currency: 'USD',
-        contents: [
-          {
-            content_id: 'shop_noon',
-            content_type: 'product',
-            content_name: 'Go to Noon Store'
-          }
-        ]
+      (window as any).ttq.track('Purchase', {
+        content_name: 'Redirected to Noon',
+        value: 1.00,
+        currency: 'USD'
       });
     }
 
