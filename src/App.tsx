@@ -327,6 +327,17 @@ export default function App() {
         });
       }
 
+      // Meta (Facebook) Pixel Tracking: AddToCart
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'AddToCart', {
+          content_type: 'product',
+          content_ids: ['copy_coupon'],
+          content_name: 'Copied Coupon Code',
+          currency: 'USD',
+          value: 1.00
+        });
+      }
+
       setTimeout(() => setCopied(false), 3000);
     });
   };
@@ -346,6 +357,17 @@ export default function App() {
         }],
         value: 1.00,
         currency: 'USD'
+      });
+    }
+
+    // Meta (Facebook) Pixel Tracking: Purchase
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Purchase', {
+        content_type: 'product',
+        content_ids: ['redirect_noon'],
+        content_name: 'Redirected to Noon',
+        currency: 'USD',
+        value: 1.00
       });
     }
 
